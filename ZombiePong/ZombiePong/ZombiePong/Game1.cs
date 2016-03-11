@@ -21,6 +21,9 @@ namespace ZombiePong
         Texture2D background, spritesheet;
 
         Sprite paddle1, paddle2, ball;
+        Random rand = new Random();
+        const int HEIGHT = 768;
+        
 
         List<Sprite> zombies = new List<Sprite>();
 
@@ -94,6 +97,8 @@ namespace ZombiePong
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
@@ -102,27 +107,38 @@ namespace ZombiePong
 
             paddle1.Location = new Vector2(paddle1.Location.X, ms.Y);
 
-            if (ball.Location.Y >= Window.ClientBounds.Height - 16)
+            if (ball.Location.Y >= HEIGHT - 16)
                 ball.Velocity = new Vector2(ball.Velocity.X, ball.Velocity.Y * -1);
 
             if (ball.Location.Y <= 0)
                 ball.Velocity = new Vector2(ball.Velocity.X, ball.Velocity.Y * -1);
 
+            if (paddle1.Location.Y <= 0)
+                paddle1.Location = new Vector2(paddle1.Location.X, 0);
+            if (paddle1.Location.Y >= HEIGHT)
+                paddle1.Location = new Vector2(paddle1.Location.X, HEIGHT);
+
+            
+
             //paddle2.Location = new Vector2(paddle2.Location.X, ball.Center.Y);
 
             if (ball.IsBoxColliding(paddle1.BoundingBoxRect) && ball.Location.Y != paddle1.Center.Y)
             {
-                    ball.Velocity = new Vector2(ball.Velocity.X * -1.10f, (float)Math.Cos(ball.Location.Y - paddle1.Center.Y) * 100);
+                    ball.Velocity = new Vector2(ball.Velocity.X * -1.000000000036f, (float)Math.Cos(ball.Location.Y - paddle1.Center.Y) * -100);
                 Window.Title = ("ball Y: " + ball.Location.Y + " \t paddle1 Y: " + paddle1.Center.Y);
             }
             if (ball.IsBoxColliding(paddle2.BoundingBoxRect) && ball.Location.Y != paddle2.Center.Y)
             {
-                ball.Velocity = new Vector2(ball.Velocity.X*-1.10f, (float)Math.Cos(ball.Location.Y - paddle2.Center.Y) * -100);
+                ball.Velocity = new Vector2(ball.Velocity.X*-1.000000000036f, (float)Math.Cos(ball.Location.Y - paddle2.Center.Y) * -100);
                 Window.Title = ("ball Y: " + ball.Location.Y + " \t paddle2 Y: " + paddle2.Center.Y);
             }
 
             /*PADDLE 2 AI*/
 
+            if (paddle2.Location.Y <= 0)
+                paddle2.Location = new Vector2(paddle2.Location.X, 0);
+            if (paddle2.Location.Y >= HEIGHT)
+                paddle2.Location = new Vector2(paddle2.Location.X, HEIGHT);
             paddle2.Location = new Vector2(paddle2.Location.X, ball.Location.Y);
 
             //if (ball.Location.X <= 0)
