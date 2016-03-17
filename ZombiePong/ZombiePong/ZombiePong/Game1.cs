@@ -23,6 +23,7 @@ namespace ZombiePong
         Sprite paddle1, paddle2, ball;
         Random rand = new Random();
         const int HEIGHT = 768;
+        float speed = 300f;
         
 
         List<Sprite> zombies = new List<Sprite>();
@@ -124,22 +125,61 @@ namespace ZombiePong
 
             if (ball.IsBoxColliding(paddle1.BoundingBoxRect) && ball.Location.Y != paddle1.Center.Y)
             {
-                    ball.Velocity = new Vector2(ball.Velocity.X * -1.000000000036f, (float)Math.Cos(ball.Location.Y - paddle1.Center.Y) * -100);
+                ball.Velocity = new Vector2(ball.Velocity.X * -1.000000000036f, (float)Math.Cos(ball.Location.Y - paddle1.Center.Y) * -100);
+                speed *= 1.1f;
+                Vector2 velocity = ball.Velocity;
+                velocity.Normalize();
+                velocity *= speed;
+                ball.Velocity = velocity;
+
                 Window.Title = ("ball Y: " + ball.Location.Y + " \t paddle1 Y: " + paddle1.Center.Y);
             }
             if (ball.IsBoxColliding(paddle2.BoundingBoxRect) && ball.Location.Y != paddle2.Center.Y)
             {
                 ball.Velocity = new Vector2(ball.Velocity.X*-1.000000000036f, (float)Math.Cos(ball.Location.Y - paddle2.Center.Y) * -100);
+                speed *= 1.1f;
+                Vector2 velocity = ball.Velocity;
+                velocity.Normalize();
+                velocity *= speed;
+                ball.Velocity = velocity;
+
                 Window.Title = ("ball Y: " + ball.Location.Y + " \t paddle2 Y: " + paddle2.Center.Y);
             }
 
+            speed = Math.Min(750, speed);
+
+
             /*PADDLE 2 AI*/
 
+            /*
             if (paddle2.Location.Y <= 0)
                 paddle2.Location = new Vector2(paddle2.Location.X, 0);
             if (paddle2.Location.Y >= HEIGHT)
                 paddle2.Location = new Vector2(paddle2.Location.X, HEIGHT);
-            paddle2.Location = new Vector2(paddle2.Location.X, ball.Location.Y);
+            paddle2.Location = new Vector2(paddle2.Location.X, paddle2.Location.Y);
+            
+            if (paddle2.Location.Y >= 0 && paddle2.Location.Y <= 650) 
+                paddle2.Location = new Vector2(paddle2.Location.X, paddle2.Location.Y + 2);
+            */
+
+            if (paddle2.Location.Y <= 0 || paddle2.BoundingBoxRect.Bottom >= 650)
+                paddle2.Velocity = Vector2.Zero;
+
+            float diff = paddle2.Center.Y - ball.Center.Y;
+
+            if (Math.Abs(diff) > 40)
+            {
+                if (diff > 0)
+                {
+                    paddle2.Velocity = new Vector2(0, -120);
+                }
+                else
+                {
+                    paddle2.Velocity = new Vector2(0, 120);
+                }
+            }
+
+            paddle2.Update(gameTime);
 
             //if (ball.Location.X <= 0)
             //    ball.Velocity = ball.Velocity * -1;
