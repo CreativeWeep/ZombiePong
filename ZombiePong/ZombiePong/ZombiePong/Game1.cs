@@ -68,6 +68,8 @@ namespace ZombiePong
             ball = new Sprite(new Vector2(700, 350), spritesheet, new Rectangle(76, 510, 40, 40), new Vector2(-300, 0));
 
             SpawnZombie(new Vector2(400, 400), new Vector2(-20, 0));
+            SpawnZombie(new Vector2(580, 520), new Vector2(20, 50));
+
         }
 
         /// <summary>
@@ -134,17 +136,21 @@ namespace ZombiePong
 
                 Window.Title = ("ball Y: " + ball.Location.Y + " \t paddle1 Y: " + paddle1.Center.Y);
             }
+
+
             if (ball.IsBoxColliding(paddle2.BoundingBoxRect) && ball.Location.Y != paddle2.Center.Y)
             {
-                ball.Velocity = new Vector2(ball.Velocity.X*-1.000000000036f, (float)Math.Cos(ball.Location.Y - paddle2.Center.Y) * -100);
+                ball.Velocity = new Vector2(ball.Velocity.X * -1.000000000036f, (float)Math.Cos(ball.Location.Y - paddle2.Center.Y) * -100);
                 speed *= 1.1f;
                 Vector2 velocity = ball.Velocity;
                 velocity.Normalize();
                 velocity *= speed;
                 ball.Velocity = velocity;
 
-                Window.Title = ("ball Y: " + ball.Location.Y + " \t paddle2 Y: " + paddle2.Center.Y);
+                Window.Title = ("ball Y: " + ball.Location.Y + " \t paddle Y: " + paddle1.Center.Y);
             }
+
+
 
             speed = Math.Min(750, speed);
 
@@ -198,16 +204,39 @@ namespace ZombiePong
 
 
 
-            ball.Update(gameTime);
+            
 
             for (int i = 0; i < zombies.Count; i++)
             {
+                if (zombies[i].IsBoxColliding(ball.BoundingBoxRect))
+                {
+                    ball.Velocity = new Vector2(ball.Velocity.X * -1.000000000036f, (float)Math.Cos(ball.Location.Y - zombies[i].Center.Y) * -100);
+                    speed *= 1.1f;
+                    Vector2 velocity = ball.Velocity;
+                    velocity.Normalize();
+                    velocity *= speed;
+                    ball.Velocity = velocity;
+
+                    Window.Title = ("ball Y: " + ball.Location.Y + " \t paddle2 Y: " + paddle2.Center.Y);
+                }
+
                 zombies[i].Update(gameTime);
 
                 // Zombie logic goes here.. 
-                zombies[i].FlipHorizontal = false;
-            }
+                zombies[i].FlipHorizontal = zombies[i].Velocity.X > 0;
 
+                if (zombies[i].Location.Y >= 624 || zombies[i].Location.Y <= 0)
+                {
+                    zombies[i].Velocity = new Vector2(zombies[i].Velocity.X, zombies[i].Velocity.Y * -1);
+                }
+
+                if (zombies[i].Location.X >= 600 || zombies[i].Location.Y <= 200)
+                {
+                    zombies[i].Velocity = new Vector2(zombies[i].Velocity.X*-1, zombies[i].Velocity.Y);
+                }
+
+            }
+            ball.Update(gameTime);
 
             base.Update(gameTime);
         }
