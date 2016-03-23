@@ -128,7 +128,7 @@ namespace ZombiePong
 
             if (ball.IsBoxColliding(paddle1.BoundingBoxRect) && ball.Location.Y != paddle1.Center.Y)
             {
-                ball.Velocity = new Vector2(ball.Velocity.X * -1.000000000036f, (float)Math.Cos((float)Math.Abs(ball.Location.Y - paddle1.Center.Y)) * 100);
+                ball.Velocity = new Vector2(ball.Velocity.X * -1.000000000036f, (float)Math.Cos((float)Math.Abs(ball.Location.Y - paddle1.Center.Y)) * yayyya100);
                 speed *= 1.1f;
                 Vector2 velocity = ball.Velocity;
                 velocity.Normalize();
