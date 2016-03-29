@@ -25,6 +25,7 @@ namespace ZombiePong
         const int HEIGHT = 768;
         float speed = 300f;
         int points = 0;
+        bool playerHit = false;
         
 
         List<Sprite> zombies = new List<Sprite>();
@@ -126,19 +127,50 @@ namespace ZombiePong
 
             //paddle2.Location = new Vector2(paddle2.Location.X, ball.Center.Y);
 
-            if (ball.IsBoxColliding(paddle1.BoundingBoxRect) && ball.Location.Y != paddle1.Center.Y)
+            if (ball.IsBoxColliding(paddle1.BoundingBoxRect))
             {
-                ball.Velocity = new Vector2(ball.Velocity.X * -1.000000000036f, (float)Math.Cos((float)Math.Abs(ball.Location.Y - paddle1.Center.Y)) * yayyya100);
+                playerHit = true;
+
+                /*
+                ball.Velocity = new Vector2(ball.Velocity.X * -1.000000000036f, (float)Math.Cos((float)Math.Abs(10-(ball.Location.Y - paddle1.Center.Y)) * -100);
                 speed *= 1.1f;
                 Vector2 velocity = ball.Velocity;
                 velocity.Normalize();
                 velocity *= speed;
-                ball.Velocity = velocity;
+                ball.Velocity = velocity;*/
+
+                float diff = ball.Center.Y - paddle1.Center.Y;
+
+                if (ball.Velocity.Y < 0 && diff < 0)
+                {
+                    ball.Velocity *= new Vector2(-1, 1);
+
+                }
+
+                else if (ball.Velocity.Y < 0 && diff > 0)
+                {
+                    ball.Velocity *= new Vector2(-1, -1);
+                }
+
+
+                float diff = ball.Center.Y - paddle1.Center.Y;
+
+                if (ball.Velocity.Y > 0 && diff < 0)
+                {
+                    ball.Velocity *= new Vector2(-1, 1);
+
+                }
+
+                else if (ball.Velocity.Y > 0 && diff > 0)
+                {
+                    ball.Velocity *= new Vector2(-1, -1);
+                }
             }
 
 
             if (ball.IsBoxColliding(paddle2.BoundingBoxRect) && ball.Location.Y != paddle2.Center.Y)
             {
+                playerHit = false;
                 ball.Velocity = new Vector2(ball.Velocity.X * -1.000000000036f, (float)Math.Cos(ball.Location.Y - paddle2.Center.Y) * 100);
                 speed *= 1.1f;
                 Vector2 velocity = ball.Velocity;
@@ -211,7 +243,7 @@ namespace ZombiePong
 
             for (int i = 0; i < zombies.Count; i++)
             {
-                if (zombies[i].IsBoxColliding(ball.BoundingBoxRect))
+                if (zombies[i].IsBoxColliding(ball.BoundingBoxRect) && playerHit)
                 {
                     points += 5;
                     ball.Velocity = new Vector2(ball.Velocity.X * -1.000000000036f, (float)Math.Cos(ball.Location.Y - zombies[i].Center.Y) * -100);
