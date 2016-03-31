@@ -102,7 +102,7 @@ namespace ZombiePong
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            
+            float diff;
 
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
@@ -139,7 +139,7 @@ namespace ZombiePong
                 velocity *= speed;
                 ball.Velocity = velocity;*/
 
-                float diff = ball.Center.Y - paddle1.Center.Y;
+                diff = ball.Center.Y - paddle1.Center.Y;
 
                 if (ball.Velocity.Y < 0 && diff < 0)
                 {
@@ -153,7 +153,46 @@ namespace ZombiePong
                 }
 
 
-                float diff = ball.Center.Y - paddle1.Center.Y;
+                diff = ball.Center.Y - paddle1.Center.Y;
+
+                if (ball.Velocity.Y > 0 && diff < 0)
+                {
+                    ball.Velocity *= new Vector2(-1, 1);
+
+                }
+
+                else if (ball.Velocity.Y > 0 && diff > 0)
+                {
+                    ball.Velocity *= new Vector2(-1, -1);
+                }
+            }
+            if (ball.IsBoxColliding(paddle1.BoundingBoxRect))
+            {
+                playerHit = true;
+
+                /*
+                ball.Velocity = new Vector2(ball.Velocity.X * -1.000000000036f, (float)Math.Cos((float)Math.Abs(10-(ball.Location.Y - paddle1.Center.Y)) * -100);
+                speed *= 1.1f;
+                Vector2 velocity = ball.Velocity;
+                velocity.Normalize();
+                velocity *= speed;
+                ball.Velocity = velocity;*/
+
+                diff = ball.Center.Y - paddle2.Center.Y;
+
+                if (ball.Velocity.Y < 0 && diff < 0)
+                {
+                    ball.Velocity *= new Vector2(-1, 1);
+
+                }
+
+                else if (ball.Velocity.Y < 0 && diff > 0)
+                {
+                    ball.Velocity *= new Vector2(-1, -1);
+                }
+
+
+                diff = ball.Center.Y - paddle2.Center.Y;
 
                 if (ball.Velocity.Y > 0 && diff < 0)
                 {
@@ -179,6 +218,18 @@ namespace ZombiePong
                 ball.Velocity = velocity;
             }
 
+
+         /*   if (ball.IsBoxColliding(paddle2.BoundingBoxRect) && ball.Location.Y != paddle2.Center.Y)
+            {
+                playerHit = false;
+                ball.Velocity = new Vector2(ball.Velocity.X * -1.000000000036f, (float)Math.Cos(ball.Location.Y - paddle2.Center.Y) * 100);
+                speed *= 1.1f;
+                Vector2 velocity = ball.Velocity;
+                velocity.Normalize();
+                velocity *= speed;
+                ball.Velocity = velocity;
+            }
+            */ 
             Window.Title = "Points: " + points;
 
             speed = Math.Min(750, speed);
@@ -200,7 +251,7 @@ namespace ZombiePong
             if (paddle2.Location.Y <= 0 || paddle2.BoundingBoxRect.Bottom >= 650)
                 paddle2.Velocity = Vector2.Zero;
 
-            float diff = paddle2.Center.Y - ball.Center.Y;
+            diff = paddle2.Center.Y - ball.Center.Y;
 
             if (Math.Abs(diff) > 40)
             {
